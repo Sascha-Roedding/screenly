@@ -38,7 +38,12 @@
     dest: /home/pi/.config/uzbl/config-screenly
 
 - name: Install pip dependencies
-  pip: requirements=/home/pi/screenly/requirements.txt
+  pip:
+    requirements: /home/pi/screenly/requirements.txt
+    virtualenv: /home/pi/screenly/.venv
+    virtualenv_site_packages: yes
+    virtualenv_python: /usr/bin/python
+    virtualenv_command: /usr/bin/virtualenv
 
 - name: Create default assets database if does not exists
   copy:
@@ -50,7 +55,7 @@
 
 - name: Run database migration
   become: no
-  command: python /home/pi/screenly/bin/migrate.py
+  command: /home/pi/screenly/.venv/bin/python /home/pi/screenly/bin/migrate.py
   register: migrate
 
 - debug: msg="{{ migrate.stdout }}"
